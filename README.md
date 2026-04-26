@@ -24,11 +24,13 @@ Food waste is a dual crisis. While millions face food insecurity, decaying surpl
 * **CSR Reporting:** A dedicated tool for corporate donors to track and demonstrate their Corporate Social Responsibility impact.
 
 
+
 ## 🛠️ Tech Stack
 * **Backend:** Python (Django)
 * **Frontend:** HTML5, CSS3, JavaScript
 * **Database:** SQLite / PostgreSQL
 * **Tools:** QR Code API, Data Visualization (Chart.js/D3.js)
+
 
 
 ## 🚀 Getting Started
@@ -60,8 +62,12 @@ Food waste is a dual crisis. While millions face food insecurity, decaying surpl
    ```bash
    python manage.py runserver
 The platform will be live at http://127.0.0.1:8000/.
+
+
 ## 📊 Impact Logic
 We track sustainability using the following environmental impact formula:
       Emissions Avoided (kg CO2e) = Weight of Food Saved (kg)X2.5
+
+      
 ## 🤝Contributing
 We welcome contributions from the community! Whether it's fixing bugs, improving the UI, or adding new reward perks, feel free to fork the repo and submit a Pull Request.👥❤️.Reducing waste, one bite at a time.
