@@ -1,0 +1,1054 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home - Basix{% endblock %}
+{% block content %}
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+
+    /* Volunteer Page Layout */
+    .volunteer-page {
+      min-height: 100vh;
+      background: #f8f9fa;
+    }
+
+    .volunteer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .volunteer-welcome {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    /* Scanner Section */
+    .volunteer-scanner-section {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      margin-bottom: 3rem;
+      overflow: hidden;
+    }
+
+    .scanner-container {
+      padding: 2rem;
+    }
+
+    .scanner-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .scanner-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 0.5rem;
+    }
+
+    .scanner-subtitle {
+      color: #6b7280;
+      font-size: 1rem;
+    }
+
+    .scanner-content {
+      max-width: 500px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .scanner-placeholder {
+      border: 2px dashed #ddd;
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted, #666);
+    }
+
+    .camera-icon {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 16px;
+      color: #ccc;
+      
+    }
+
+    .scanner-box {
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      width: 100%;
+      height: 300px;   /* fixed height */
+      margin-top: 16px;
+      background: #f8f9fa;
+      border: 2px solid #e9ecef;
+    }
+
+    /* QR scanner feed */
+    #preview {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      min-height: 300px !important;
+      background: #000 !important;
+      border-radius: 10px;
+      overflow: hidden;
+      display: block !important;
+      z-index: 1;
+    }
+
+    /* Force video to be visible */
+    #preview video {
+      width: 100% !important;
+      height: 100% !important;
+      min-height: 300px !important;
+      max-height: 100% !important;
+      object-fit: cover !important;
+      border-radius: 10px;
+      display: block !important;
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      z-index: 2 !important;
+      background: #000 !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
+    /* Scanner overlay for better visibility */
+    #preview canvas {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      z-index: 10 !important;
+    }
+
+    /* Force all child elements to be visible */
+    #preview * {
+      visibility: visible !important;
+    }
+
+    #preview > div {
+      width: 100% !important;
+      height: 100% !important;
+      min-height: 300px !important;
+      position: relative !important;
+      display: block !important;
+      background: #000 !important;
+    }
+
+    #preview > div > video {
+      width: 100% !important;
+      height: 100% !important;
+      min-height: 300px !important;
+      object-fit: cover !important;
+      display: block !important;
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      z-index: 2 !important;
+    }
+
+    .scan-result {
+      margin: 16px 0;
+      font-weight: 500;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .scanner-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .scanner-btn {
+      padding: 14px;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: 0.2s ease;
+      font-weight: 600;
+    }
+
+    .scanner-btn.primary {
+      background: #009957;
+      color: #fff;
+    }
+
+    .scanner-btn.primary:hover {
+      background: #007a47;
+    }
+
+    .scanner-btn.ghost {
+      background: #f1f5f9;
+      color: #111;
+    }
+
+    .scanner-btn.ghost:disabled {
+      background: #e5e7eb;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    /* Assigned Donations Section */
+    .assigned-donations-section {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .donations-container {
+      padding: 2rem;
+    }
+
+    .donations-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Responsive Design */
+    @media (min-width: 1100px) {
+      .donations-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 780px) {
+      .donation-card {
+        grid-template-columns: 100px 1fr;
+      }
+      .card-right {
+        grid-column: span 2;
+        align-items: stretch;
+      }
+      .donation-card .btn {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .scanner-placeholder {
+        padding: 24px;
+      }
+      .camera-icon {
+        width: 64px;
+        height: 64px;
+      }
+      .scanner-box {
+        height: 220px; 
+      }
+      .scanner-btn {
+        width: 100%;
+      }
+    }
+    /* Donation Cards - Match donation page styling */
+    .donations-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .donation-card {
+      display: grid;
+      grid-template-columns: 120px 1fr 180px;
+      gap: 16px;
+      align-items: center;
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .donation-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    }
+
+    .card-left .thumb {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 10px;
+      background: #f3f3f3;
+    }
+
+    .card-mid {
+      min-width: 0;
+    }
+
+    .title-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .item-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    .tag {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #eef2ee;
+      color: #2b2b2b;
+      border: 1px solid #e4e4e4;
+    }
+
+    .tag.status-reserved {
+      background: rgba(245, 158, 11, 0.12);
+      color: #d97706;
+      border-color: rgba(245, 158, 11, 0.25);
+    }
+
+    .tag.status-completed {
+      background: rgba(59, 130, 246, 0.12);
+      color: #2563eb;
+      border-color: rgba(59, 130, 246, 0.25);
+    }
+
+    .meta-row, .facts-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .meta, .fact {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .expires {
+      font-size: 12px;
+      color: #6b7280;
+    }
+    /* Action Buttons Styling */
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 100%;
+    }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+      min-height: 44px;
+    }
+
+    .action-btn.primary {
+      background: linear-gradient(135deg, #009957, #007a47);
+      color: white;
+      box-shadow: 0 2px 4px rgba(0, 153, 87, 0.2);
+    }
+
+    .action-btn.primary:hover {
+      background: linear-gradient(135deg, #007a47, #005d35);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0, 153, 87, 0.3);
+    }
+
+    .action-btn.secondary {
+      background: #f8f9fa;
+      color: #374151;
+      border: 1px solid #d1d5db;
+    }
+
+    .action-btn.secondary:hover {
+      background: #e9ecef;
+      border-color: #9ca3af;
+      transform: translateY(-1px);
+    }
+
+    .btn-icon {
+      font-size: 1rem;
+    }
+
+    .btn-text {
+      font-weight: 600;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin: 0.5rem 0;
+    }
+
+    .divider::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: #e5e7eb;
+    }
+
+    .divider-text {
+      background: white;
+      padding: 0 1rem;
+      color: #6b7280;
+      font-size: 0.75rem;
+      font-weight: 500;
+      z-index: 1;
+    }
+
+    .file-upload-area {
+      position: relative;
+      width: 100%;
+    }
+
+    .file-input {
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    .file-upload-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: #f8f9fa;
+      border: 2px dashed #d1d5db;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-height: 44px;
+      width: 100%;
+    }
+
+    .file-upload-label:hover {
+      background: #e9ecef;
+      border-color: #9ca3af;
+    }
+
+    .upload-icon {
+      font-size: 1rem;
+      color: #6b7280;
+    }
+
+    .upload-text {
+      font-weight: 500;
+      color: #374151;
+      font-size: 0.875rem;
+    }
+
+    .completed-status {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+      border-radius: 0.75rem;
+      border: 1px solid #93c5fd;
+    }
+
+    .status-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.375rem;
+    }
+    .result-message {
+      margin-top: 0.5rem;
+      color: #374151;
+    }
+    .completed-status {
+      margin-top: 1rem;
+      color: #3b82f6;
+      font-weight: 600;
+    }
+    .completed-icon {
+      font-size: 1.2rem;
+    }
+    .completed-text {
+      font-size: 0.95rem;
+    }
+    .no-donations {
+      color: #6b7280;
+      text-align: center;
+      grid-column: 1 / -1;
+      padding: 2rem;
+    }
+  </style>
+
+  <div class="volunteer-page">
+    <div class="volunteer-container">
+      <h1 class="volunteer-welcome">Volunteer Dashboard</h1>
+      {% csrf_token %}
+
+      <!-- Scanner Section -->
+      <section class="volunteer-scanner-section">
+        <div class="scanner-container">
+          <div class="scanner-header">
+            <h2 class="scanner-title">QR Code Scanner</h2>
+            <p class="scanner-subtitle">Scan QR codes from donations to verify pickups</p>
+          </div>
+          
+          <div class="scanner-content">
+            <div id="scannerPlaceholder" class="scanner-placeholder">
+              <!-- Camera Icon -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="camera-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 7h2l2-3h10l2 3h2a2 2 0 012 2v9a2 2 0 01-2 2H3a2 2 0 01-2-2V9a2 2 0 012-2z" />
+                <circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              <p>Ready to scan a code</p>
+            </div>
+            <div id="scannerBox" class="scanner-box hidden">
+              <div id="preview"></div>
+            </div>
+            <p id="scanResult" class="scan-result">Waiting for scan...</p>
+            <div class="scanner-actions">
+              <button id="startBtn" class="scanner-btn primary">Start Scanning</button>
+              <button id="confirmBtn" class="scanner-btn ghost" disabled>Confirm Pickup</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Assigned Donations Section -->
+      <section class="assigned-donations-section">
+        <div class="donations-container">
+          <h2 class="donations-title">My Assigned Donations</h2>
+          <div class="donations-grid">
+          {% for donation in assigned_donations %}
+          <div class="donation-card">
+            <div class="card-left">
+              <img class="thumb" src="{{ donation.food_image.url|default:'/static/default-food.jpg' }}" alt="{{ donation.item_name }}">
+            </div>
+            <div class="card-mid">
+              <div class="title-row">
+                <h3 class="item-title">{{ donation.item_name }}</h3>
+                <span class="tag status-{{ donation.status }}">{{ donation.get_status_display }}</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta">📍 {{ donation.pickup_location }}</span>
+                <span class="meta">🕒 {{ donation.time_available }}</span>
+              </div>
+              <div class="facts-row">
+                <span class="fact">📦 {{ donation.quantity }} {{ donation.unit }}</span>
+                <span class="fact">📝 {{ donation.notes|default:"No additional notes" }}</span>
+              </div>
+            </div>
+            <div class="card-right">
+              {% if donation.status == 'reserved' %}
+                <div class="action-buttons">
+                  <button type="button" class="action-btn primary scan-btn" data-donation-id="{{ donation.id }}">
+                    <span class="btn-icon">📱</span>
+                    <span class="btn-text">Scan QR</span>
+                  </button>
+                  
+                  <div class="divider">
+                    <span class="divider-text">or</span>
+                  </div>
+                  
+                  <form id="qrForm-{{ donation.id }}" enctype="multipart/form-data" class="upload-form">
+                    <div class="file-upload-area">
+                      <input type="file" name="qr_image" accept="image/*" required class="file-input" id="file-{{ donation.id }}">
+                      <label for="file-{{ donation.id }}" class="file-upload-label">
+                        <span class="upload-icon">📁</span>
+                        <span class="upload-text">Choose QR Image</span>
+                      </label>
+                    </div>
+                    <button type="submit" class="action-btn secondary upload-btn">
+                      <span class="btn-icon">⬆️</span>
+                      <span class="btn-text">Upload & Verify</span>
+                    </button>
+                  </form>
+                </div>
+                <p id="result-{{ donation.id }}" class="result-message"></p>
+              {% elif donation.status == 'completed' %}
+                <div class="completed-status">
+                  <div class="status-icon">✅</div>
+                  <div class="status-text">Completed</div>
+                </div>
+              {% endif %}
+              <div class="expires">Posted on {{ donation.created_at|date:"M d, Y" }}</div>
+            </div>
+          </div>
+          {% empty %}
+            <p class="no-donations">You have no assigned donations.</p>
+          {% endfor %}
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    {% for donation in assigned_donations %}
+    document.getElementById('qrForm-{{ donation.id }}').addEventListener('submit', function(e){
+      e.preventDefault();
+      let formData = new FormData(this);
+      const resultEl = document.getElementById('result-{{ donation.id }}');
+      fetch('/upload_qr/{{ donation.id }}/', {
+        method: 'POST',
+        headers: {"X-CSRFToken": "{{ csrf_token }}"},
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.success){
+          resultEl.textContent = data.message;
+          setTimeout(() => location.reload(), 1000);  // reload to show completed status
+        } else {
+          resultEl.textContent = data.error;
+        }
+      })
+      .catch(err => {
+        resultEl.textContent = "❌ Error uploading QR image.";
+        console.error(err);
+      });
+    });
+    {% endfor %}
+  </script>
+
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <script>
+  let html5QrCode;
+  let isScanning = false;
+  let currentDonationId = null;
+
+  // Wait for the library to load
+  document.addEventListener('DOMContentLoaded', function() {
+    // Wait a bit more to ensure all elements are rendered
+    setTimeout(() => {
+      const startBtn = document.getElementById("startBtn");
+      const confirmBtn = document.getElementById("confirmBtn");
+      const scanResult = document.getElementById("scanResult");
+      const placeholder = document.getElementById("scannerPlaceholder");
+      const scannerBox = document.getElementById("scannerBox");
+
+      // Check if elements exist
+      if (!startBtn || !confirmBtn || !scanResult || !placeholder || !scannerBox) {
+        console.error('Required elements not found:', {
+          startBtn: !!startBtn,
+          confirmBtn: !!confirmBtn,
+          scanResult: !!scanResult,
+          placeholder: !!placeholder,
+          scannerBox: !!scannerBox
+        });
+        return;
+      }
+
+      if (typeof Html5Qrcode === 'undefined') {
+        console.error('Html5Qrcode library not loaded');
+        scanResult.textContent = '❌ QR Scanner library failed to load';
+        return;
+      }
+
+      startBtn.addEventListener("click", () => {
+        if (!isScanning) {
+          startScanning();
+        } else {
+          stopScanning();
+        }
+      });
+
+      confirmBtn.addEventListener("click", () => {
+        if (currentDonationId) {
+          verifyQRCode(currentDonationId, scanResult.textContent);
+        }
+      });
+
+        // Add event listeners for scan buttons
+        document.querySelectorAll('.scan-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const donationId = e.target.getAttribute('data-donation-id');
+            startScanningForDonation(donationId);
+            
+            // Scroll to the scanner section
+            const scannerSection = document.querySelector('.volunteer-scanner-section');
+            if (scannerSection) {
+              scannerSection.scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+              });
+            }
+          });
+        });
+
+        // Store reference to current donation card for re-scrolling
+        let currentDonationCard = null;
+
+      // Add event listeners for file inputs
+      document.querySelectorAll('.file-input').forEach(input => {
+        input.addEventListener('change', (e) => {
+          const label = e.target.nextElementSibling;
+          if (e.target.files.length > 0) {
+            label.textContent = `📁 ${e.target.files[0].name}`;
+            label.style.background = '#e0f2fe';
+            label.style.borderColor = '#0ea5e9';
+          } else {
+            label.textContent = '📁 Choose QR Image';
+            label.style.background = '#f8f9fa';
+            label.style.borderColor = '#d1d5db';
+          }
+        });
+      });
+
+      console.log('Scanner elements initialized successfully');
+    }, 100);
+  });
+
+  function startScanningForDonation(donationId) {
+    currentDonationId = donationId;
+    const scanResult = document.getElementById("scanResult");
+    scanResult.textContent = `Scanning QR code for donation #${donationId}...`;
+    
+    // Store reference to the current donation card
+    currentDonationCard = document.querySelector(`[data-donation-id="${donationId}"]`).closest('.donation-card');
+    
+    startScanning();
+  }
+
+  function verifyQRCode(donationId, qrData) {
+    const resultEl = document.getElementById(`result-${donationId}`);
+    
+    // Extract the expected QR data format (should be /verify/{donation_id}/)
+    const expectedQRData = `/verify/${donationId}/`;
+    
+    if (qrData.includes(expectedQRData)) {
+      // QR code matches this donation
+      resultEl.textContent = "✅ Valid QR code! Verifying pickup...";
+      resultEl.style.color = "#10b981";
+      
+      // Send verification to backend
+      fetch(`/verify/${donationId}/`, {
+        method: 'POST',
+        headers: {
+          "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ verified: true })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          resultEl.textContent = "✅ Pickup verified successfully!";
+          resultEl.style.color = "#10b981";
+          
+          // Scroll back to the donation card
+          if (currentDonationCard) {
+            currentDonationCard.scrollIntoView({ 
+              behavior: 'smooth',
+              block: 'center'
+            });
+          }
+          
+          // Reload the page to show updated status
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        } else {
+          resultEl.textContent = "❌ Verification failed: " + data.error;
+          resultEl.style.color = "#ef4444";
+        }
+      })
+      .catch(err => {
+        resultEl.textContent = "❌ Error verifying pickup.";
+        resultEl.style.color = "#ef4444";
+        console.error(err);
+      });
+    } else {
+      // Wrong QR code
+      resultEl.textContent = "❌ Wrong QR code! This QR code doesn't match donation #" + donationId;
+      resultEl.style.color = "#ef4444";
+    }
+    
+    // Reset scanner
+    stopScanning();
+  }
+
+  function startScanning() {
+    const placeholder = document.getElementById("scannerPlaceholder");
+    const scannerBox = document.getElementById("scannerBox");
+    const scanResult = document.getElementById("scanResult");
+    const startBtn = document.getElementById("startBtn");
+    const confirmBtn = document.getElementById("confirmBtn");
+    const preview = document.getElementById("preview");
+
+    console.log("Starting scanner with elements:", {
+      placeholder: !!placeholder,
+      scannerBox: !!scannerBox,
+      scanResult: !!scanResult,
+      startBtn: !!startBtn,
+      confirmBtn: !!confirmBtn,
+      preview: !!preview
+    });
+
+    // Start scanning
+    placeholder.classList.add("hidden");
+    scannerBox.classList.remove("hidden");
+    scanResult.textContent = "Starting camera...";
+
+    // Clear any existing scanner
+    if (html5QrCode) {
+      try {
+        html5QrCode.clear();
+      } catch (e) {
+        console.log("Scanner already cleared");
+      }
+    }
+
+    // Ensure preview element exists
+    if (!preview) {
+      console.error("Preview element not found!");
+      scanResult.textContent = "❌ Scanner element not found";
+      return;
+    }
+
+    html5QrCode = new Html5Qrcode("preview");
+    console.log("Html5Qrcode instance created");
+
+    html5QrCode.start(
+      { facingMode: "environment" }, // back camera
+      {
+        fps: 10,
+        qrbox: function(viewfinderWidth, viewfinderHeight) {
+          let minEdgePercentage = 0.7; // 70%
+          let minEdgeSize = Math.min(viewfinderWidth, viewfinderHeight);
+          let qrboxSize = Math.floor(minEdgeSize * minEdgePercentage);
+          
+          // Ensure minimum size of 50px as required by the library
+          qrboxSize = Math.max(qrboxSize, 50);
+          
+          return {
+            width: qrboxSize,
+            height: qrboxSize
+          };
+        },
+        aspectRatio: 1.0,
+        showTorchButtonIfSupported: true,
+        showZoomSliderIfSupported: true,
+        rememberLastUsedCamera: true,
+        supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA]
+      },
+        qrCodeMessage => {
+          console.log("QR Code detected:", qrCodeMessage);
+          scanResult.textContent = `QR Code detected: ${qrCodeMessage}`;
+          confirmBtn.disabled = false;
+          // Don't stop scanning automatically - let user confirm
+        },
+      errorMessage => {
+        // detection errors (no QR found in frame) - this is normal
+        // Only show errors that aren't "NotFoundException" or canvas errors
+        if (!errorMessage.includes('NotFoundException') && 
+            !errorMessage.includes('getImageData') && 
+            !errorMessage.includes('IndexSizeError')) {
+          console.log("Scanning...", errorMessage);
+        }
+      }
+    ).then(() => {
+      isScanning = true;
+      startBtn.textContent = "Stop Scanning";
+      scanResult.textContent = "Camera active - Point at QR code...";
+      console.log("Camera started successfully");
+      
+      // Debug: Check what elements were created and force styling
+      setTimeout(() => {
+        const preview = document.getElementById("preview");
+        console.log("Preview element children:", preview.children);
+        console.log("Preview element HTML:", preview.innerHTML);
+        
+        // Check for video element
+        const video = preview.querySelector('video');
+        if (video) {
+          console.log("Video element found:", video);
+          console.log("Video dimensions:", video.videoWidth, "x", video.videoHeight);
+          console.log("Video style before fix:", video.style.cssText);
+          
+          // Force the video to fill the container with aggressive styling
+          video.style.cssText = `
+            width: 100% !important;
+            height: 100% !important;
+            min-height: 300px !important;
+            object-fit: cover !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            display: block !important;
+            z-index: 2 !important;
+            background: #000 !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            border-radius: 10px !important;
+          `;
+          
+          // Also set attributes directly
+          video.setAttribute('style', video.style.cssText);
+          
+          // Also try to make the parent container visible
+          const videoParent = video.parentElement;
+          if (videoParent) {
+            videoParent.style.width = "100%";
+            videoParent.style.height = "100%";
+            videoParent.style.position = "relative";
+            videoParent.style.display = "block";
+            videoParent.style.backgroundColor = "#000";
+          }
+          
+          // Make sure the preview container is visible
+          preview.style.backgroundColor = "#ff0000"; // Red background to test visibility
+          preview.style.minHeight = "300px";
+          preview.style.display = "block";
+          preview.style.border = "3px solid #00ff00"; // Green border to test visibility
+          
+          // Add a test div to see if the container is visible
+          const testDiv = document.createElement('div');
+          testDiv.style.cssText = `
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: yellow;
+            color: black;
+            padding: 5px;
+            z-index: 1000;
+            font-size: 12px;
+          `;
+          testDiv.textContent = 'TEST: Container is visible';
+          preview.appendChild(testDiv);
+          
+          console.log("Video style after fix:", video.style.cssText);
+          console.log("Preview container style:", preview.style.cssText);
+          console.log("Video parent style:", videoParent ? videoParent.style.cssText : "No parent found");
+        } else {
+          console.log("No video element found in preview");
+        }
+      }, 1000);
+    }).catch(err => {
+      console.error("Camera start failed:", err);
+      let errorMsg = "❌ Camera error: ";
+      if (err.name === 'NotAllowedError') {
+        errorMsg += "Camera access denied. Please allow camera access and try again.";
+      } else if (err.name === 'NotFoundError') {
+        errorMsg += "No camera found. Please connect a camera and try again.";
+      } else if (err.name === 'NotSupportedError') {
+        errorMsg += "Camera not supported. Please use a different browser or device.";
+      } else {
+        errorMsg += err.message || "Unknown error occurred";
+      }
+      scanResult.textContent = errorMsg;
+      resetUI();
+    });
+  }
+
+  function stopScanning() {
+    if (html5QrCode && isScanning) {
+      html5QrCode.stop().then(() => {
+        console.log("Scanner stopped successfully");
+        // Wait a bit before clearing to avoid DOM errors
+        setTimeout(() => {
+          if (html5QrCode) {
+            try {
+              html5QrCode.clear();
+            } catch (e) {
+              console.log("Scanner already cleared");
+            }
+          }
+          resetUI();
+        }, 100);
+      }).catch(err => {
+        console.error("Failed to stop scanning", err);
+        // Force reset even if stop fails
+        resetUI();
+      });
+    } else {
+      resetUI();
+    }
+  }
+
+  function resetUI() {
+    const startBtn = document.getElementById("startBtn");
+    const scannerBox = document.getElementById("scannerBox");
+    const placeholder = document.getElementById("scannerPlaceholder");
+    const scanResult = document.getElementById("scanResult");
+    const confirmBtn = document.getElementById("confirmBtn");
+
+    isScanning = false;
+    if (startBtn) {
+      startBtn.textContent = "Start Scanning";
+      startBtn.classList.remove("ghost");
+      startBtn.classList.add("primary");
+    }
+    if (scannerBox) scannerBox.classList.add("hidden");
+    if (placeholder) placeholder.classList.remove("hidden");
+    if (scanResult) scanResult.textContent = "Waiting for scan...";
+    if (confirmBtn) confirmBtn.disabled = true;
+    
+    // Clear the scanner safely
+    if (html5QrCode) {
+      try {
+        html5QrCode.clear();
+      } catch (e) {
+        console.log("Scanner already cleared or not initialized");
+      }
+      html5QrCode = null;
+    }
+  }
+
+  // Cleanup on page unload
+  window.addEventListener('beforeunload', stopScanning);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      stopScanning();
+    }
+  });
+  </script>
+{% endblock %}

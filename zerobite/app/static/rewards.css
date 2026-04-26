@@ -1,0 +1,214 @@
+.carousel-inner img {
+    height: 300px; /* adjust as needed */
+    width: 100%;
+    object-fit: cover;
+  }
+  
+  .carousel-caption {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.48); /* slightly softer overlay for clarity */
+    padding: 1.2rem 2rem;
+    border-radius: 1.2rem;
+    width: auto;
+    min-width: 220px;
+    max-width: 80vw;
+    text-align: center;
+    z-index: 2;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+  }
+  
+  .carousel-caption h2 {
+    color: #fff;
+    font-size: 2.2rem;
+    font-weight: 800;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+    margin-bottom: 0.7rem;
+    word-break: break-word;
+  }
+  
+  .carousel-caption p {
+    color: #f0f0f0;
+    font-size: 1.13rem;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    line-height: 1.4;
+    margin-bottom: 0;
+    word-break: break-word;
+  }
+  
+  /* Responsive tweaks for mobile screens */
+  @media (max-width: 767px) {
+    .carousel-inner img {
+      height: 180px;
+    }
+    .carousel-caption {
+      padding: 0.8rem 0.5rem;
+      min-width: 70vw;
+      max-width: 95vw;
+    }
+    .carousel-caption h2 {
+      font-size: 1.12rem;
+    }
+    .carousel-caption p {
+      font-size: 0.97rem;
+    }
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  .reward-balance {
+    margin-bottom: 24px;
+  }
+  
+  .balance-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(16, 30, 54, 0.07);
+    padding: 24px 32px;
+    display: inline-block;
+    text-align: center;
+  }
+  
+  .balance-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #169a59;
+  }
+  
+  .balance-label {
+    font-size: 1rem;
+    color: #666;
+  }
+  
+  .reward-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(16, 30, 54, 0.07);
+    padding: 20px 28px;
+    max-width: 400px;
+  }
+  
+  .reward-card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  
+  .reward-card-icon-bg {
+    background: #edf7f3;
+    border-radius: 10px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+  }
+  
+  .reward-card-icon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .reward-card-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #181818;
+  }
+  
+  .reward-card-desc {
+    margin: 2px 0 0 0;
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  .reward-card-details {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  
+  .reward-card-tokens {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 1rem;
+  }
+  
+  .reward-card-token-icon {
+    color: #73d175;
+    font-size: 1.1rem;
+  }
+  
+  .reward-card-token-value {
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin-left: 2px;
+    color: #181818;
+  }
+  
+  .reward-card-token-label {
+    font-size: 1rem;
+    color: #666;
+    margin-left: 3px;
+  }
+  
+  .reward-card-badge {
+    background: #f4f7fa;
+    color: #383838;
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 0.92rem;
+    font-weight: 500;
+  }
+  
+  .reward-card-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #169a59;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    padding: 5px 20px; /* Small height, compact width */
+    min-width: 128px;    /* Keep button compact */
+    cursor: pointer;
+    transition: background 0.2s;
+    margin: 0 auto;
+  }
+  
+  .reward-card-btn:hover {
+    background: #127945;
+  }
+  
+  .reward-card-btn-icon {
+    margin-right: 8px;
+    font-size: 1rem;
+  }

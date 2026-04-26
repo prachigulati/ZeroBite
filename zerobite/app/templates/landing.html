@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home - Basix{% endblock %}
+{% block content %}
+
+
+
+<section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-left">
+          <h1 class="hero-title">
+            Together we can <br>
+            <span class="accent" id="animatedWords"></span>
+          </h1>
+          <p class="hero-lead">
+            Join thousands of donors and volunteers redistributing surplus meals to communities in need.
+          </p>
+
+          <div class="hero-ctas">
+            {% if user.is_authenticated %}
+              <a href="{% url 'donate' %}" class="btn primary large">Donate</a>
+              <a href="{% url 'volunteer_dashboard' %}" class="btn outline large">Volunteer Pickup</a>
+            {% else %}
+              <button onclick="openLoginModal()" class="btn primary large">Donate</button>
+              <button onclick="openLoginModal()" class="btn outline large">Volunteer Pickup</button>
+            {% endif %}
+          </div>
+
+          <ul class="kpis">
+            <li>
+              <div class="kpi-value" data-target="1200000">0</div>
+              <div class="kpi-label">Meals redistributed</div>
+            </li>
+            <li>
+              <div class="kpi-value" data-target="45000">0</div>
+              <div class="kpi-label">Active donors</div>
+            </li>
+            <li>
+              <div class="kpi-value" data-target="8100">0</div>
+              <div class="kpi-label">Volunteer shifts</div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="hero-right">
+          <!-- Image slides/cards display -->
+          <div class="image-slides">
+            <div class="slide active">
+              <img src="{% static 'assets/img1.jpg' %}" alt="Food distribution" />
+            </div>
+            <div class="slide">
+              <img src="{% static 'assets/img2.jpg' %}" alt="Fresh bread" />
+            </div>
+            <div class="slide">
+              <img src="{% static 'assets/img3.jpg' %}" alt="Community meal" />
+            </div>
+            <div class="slide">
+              <img src="{% static 'assets/img4.jpg' %}" alt="Volunteer work" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="container features-row">
+
+        <article class="feature-card" data-aos="fade-up" data-aos-delay="100" data-aos-offset="200">
+          <!-- donation icon -->
+          <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+            <rect x="12" y="20" width="40" height="28" rx="6" fill="#009957" opacity="0.2" />
+            <path d="M20 34h24M20 26h24" stroke="#009957" stroke-width="3" stroke-linecap="round" />
+          </svg>
+          <h3 class="feature-title">Track Donations</h3>
+          <p class="feature-desc">View donation history and impact reports in one place.</p>
+        </article>
+
+        <article class="feature-card" data-aos="fade-up" data-aos-delay="300" data-aos-offset="200">
+          <!-- volunteer icon -->
+          <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+            <circle cx="32" cy="20" r="8" fill="#009957" />
+            <path d="M16 50c4-12 28-12 32 0" stroke="#009957" stroke-width="4" fill="none" stroke-linecap="round" />
+          </svg>
+          <h3 class="feature-title">Volunteer Pickup</h3>
+          <p class="feature-desc">Sign up to collect and deliver surplus meals near you.</p>
+        </article>
+
+        <article class="feature-card" data-aos="fade-up" data-aos-delay="500" data-aos-offset="200">
+          <!-- rewards icon -->
+          <svg class="feature-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+            <polygon points="32,10 38,26 55,26 41,38 46,54 32,45 18,54 23,38 9,26 26,26" fill="#009957" />
+          </svg>
+          <h3 class="feature-title">Earn Rewards</h3>
+          <p class="feature-desc">Get points & recognitions for your contributions.</p>
+        </article>
+
+      </div>
+    </section>
+
+    <script src="{% static 'index.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 1000,
+      easing: 'ease-in-out',
+      once: true
+    });
+
+    window.addEventListener('load', () => {
+      AOS.refresh();
+    });
+    
+    // Image slides functionality
+    let currentSlideIndex = 1;
+    const slides = document.querySelectorAll('.slide');
+    
+    function showSlide(n) {
+      // Hide all slides
+      slides.forEach(slide => slide.classList.remove('active'));
+      
+      // Show current slide
+      if (n > slides.length) currentSlideIndex = 1;
+      if (n < 1) currentSlideIndex = slides.length;
+      
+      slides[currentSlideIndex - 1].classList.add('active');
+    }
+    
+    // Auto-advance slides every 3 seconds
+    setInterval(() => {
+      currentSlideIndex++;
+      if (currentSlideIndex > slides.length) currentSlideIndex = 1;
+      showSlide(currentSlideIndex);
+    }, 3000);
+    
+    // Initialize first slide
+    showSlide(1);
+  </script>
+  
+  <style>
+    /* Image slides styling */
+    .image-slides {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      height: 500px; /* Much bigger vertically */
+      margin: 0 auto;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+    
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+    
+    .slide.active {
+      opacity: 1;
+    }
+    
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 16px;
+    }
+    
+    
+    /* Ensure hero section displays properly */
+    .hero {
+      min-height: 500px;
+      display: flex;
+      align-items: center;
+      padding: 80px 0;
+    }
+    
+    .hero-grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+    
+    .hero-left {
+      flex: 1;
+    }
+    
+    .hero-right {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    /* Responsive design */
+    @media (max-width: 900px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      
+      .image-slides {
+        max-width: 400px;
+        height: 400px; /* Keep bigger size on mobile too */
+      }
+    }
+  </style>
+
+{% endblock %}

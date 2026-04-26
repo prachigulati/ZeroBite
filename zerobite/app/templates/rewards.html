@@ -1,0 +1,320 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home - Basix{% endblock %}
+{% block content %}
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
+  <link rel="stylesheet" href="{% static 'rewards.css' %}">
+
+
+
+
+
+
+    <div class="page">
+
+   
+<div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
+          aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"
+          aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"
+          aria-label="Slide 3"></button>
+      </div>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="{% static 'assets/reward3.jpg' %}" class="d-block w-100" alt="...">
+          <div class="carousel-caption d-none d-md-block">
+            <h2>Rewards</h2>
+            <p>Earn points, redeem gifts, and celebrate your impact.</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img src="{% static 'assets/reward1.jpg' %}" class="d-block w-100" alt="...">
+          <div class="carousel-caption d-none d-md-block">
+            <h2>Rewards</h2>
+            <p>Earn points, redeem gifts, and celebrate your impact.</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img src="{% static 'assets/reward2.jpg' %}" class="d-block w-100" alt="...">
+          <div class="carousel-caption d-none d-md-block">
+            <h2>Rewards</h2>
+            <p>Earn points, redeem gifts, and celebrate your impact.</p>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
+        data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
+        data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+
+
+
+    <!-- Rewards Content -->
+     <!-- Rewards Content -->
+    <section class="rewards-section container" style="margin-top: 20px;" >
+      <!-- User Balance -->
+   <div class="user-stats-card">
+  <div class="stats-header">
+    <div class="header-text">
+      <h2>Your Rewards</h2>
+      <p>Keep making a difference in your community</p>
+    </div>
+    <div class="stats-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+      </svg>
+    </div>
+  </div>
+  <div class="stats-content">
+    <div class="stat-item">
+      <div class="stat-value" id="user-tokens">{{ tokens }}</div>
+      <div class="stat-label">Available Tokens</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="user-level">{{ level }}</div>
+      <div class="stat-label">Current Level</div>
+      <div class="progress-container">
+        <div class="progress-bar" id="level-progress-bar" style="width: {{ progress_percentage }}%"></div>
+      </div>
+      <div class="progress-label" id="progress-label-text">{{ tokens_to_next }} tokens to next level</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="user-streak">{{ streak }}🔥</div>
+      <div class="stat-label">Day Streak</div>
+    </div>
+  </div>
+  
+  <!-- Additional Stats -->
+  <div class="additional-stats">
+    <div class="stat-row">
+      <div class="stat-mini">
+        <div class="mini-value">{{ total_donations }}</div>
+        <div class="mini-label">Donations Made</div>
+      </div>
+      <div class="stat-mini">
+        <div class="mini-value">{{ total_pickups }}</div>
+        <div class="mini-label">Pickups Completed</div>
+      </div>
+    </div>
+  </div>
+</div>
+    </section>
+    
+
+    
+
+  <!-- Rewards Grid (flexbox wrapping) -->
+  <div style="display:flex; flex-wrap:wrap; gap:16px;margin-left: 50px;margin-right: 50px;">
+
+    <!-- Reward Card -->
+    <div style="flex:1 1 calc(33% - 16px); min-width:250px; border:1px solid #eee; border-radius:10px; padding:20px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+      <div style="font-size:30px; margin-bottom:10px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><path d="M6 1v3"></path><path d="M10 1v3"></path><path d="M14 1v3"></path>
+            </svg>
+</div>
+      <h3 style="font-size:16px; margin:0; font-weight:600;">Free Coffee</h3>
+      <p style="color:#555; font-size:14px; margin:6px 0 12px;">Enjoy a free coffee at participating cafes</p>
+      <p style="color:#666; font-size:14px; margin-bottom:12px;">tokens 
+        <span style="margin-left:8px; padding:2px 8px; border:1px solid #ddd; border-radius:12px; font-size:12px;">Food & Drink</span>
+      </p>
+      <button style="width:100%; padding:10px; background:#009957; color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer;">150 points </button>
+    </div>
+
+    <!-- Another Card -->
+    <div style="flex:1 1 calc(33% - 16px); min-width:250px; border:1px solid #eee; border-radius:10px; padding:20px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+      <div style="font-size:30px; margin-bottom:10px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line>
+            </svg>
+</div>
+      <h3 style="font-size:16px; margin:0; font-weight:600;">Restaurant Voucher</h3>
+      <p style="color:#555; font-size:14px; margin:6px 0 12px;">$10 off at local sustainable restaurants</p>
+      <p style="color:#666; font-size:14px; margin-bottom:12px;">tokens 
+        <span style="margin-left:8px; padding:2px 8px; border:1px solid #ddd; border-radius:12px; font-size:12px;">Food & Drink</span>
+      </p>
+      <button style="width:100%; padding:10px; background:#009957; color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer;">200 points</button>
+    </div>
+
+    <!-- Another Card -->
+    <div style="flex:1 1 calc(33% - 16px); min-width:250px; border:1px solid #eee; border-radius:10px; padding:20px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+      <div style="font-size:30px; margin-bottom:10px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle>
+            </svg>
+</div>
+      <h3 style="font-size:16px; margin:0; font-weight:600;">Eco-Friendly Delivery</h3>
+      <p style="color:#555; font-size:14px; margin:6px 0 12px;">Free eco-friendly delivery for your next order</p>
+      <p style="color:#666; font-size:14px; margin-bottom:12px;">tokens 
+        <span style="margin-left:8px; padding:2px 8px; border:1px solid #ddd; border-radius:12px; font-size:12px;">Services</span>
+      </p>
+      <button style="width:100%; padding:10px; background:#009957; color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer;">250 points</button>
+    </div>
+
+    <!-- Add as many more cards as needed -->
+    <div style="flex:1 1 calc(33% - 16px); min-width:250px; border:1px solid #eee; border-radius:10px; padding:20px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+      <div style="font-size:30px; margin-bottom:10px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 22h-4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2z"></path><path d="M18 2h-2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h2"></path><path d="M6 4h-2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h2"></path>
+            </svg>
+</div>
+      <h3 style="font-size:16px; margin:0; font-weight:600;">Skill Workshop</h3>
+      <p style="color:#555; font-size:14px; margin:6px 0 12px;">Access free volunteer training and skill-building sessions</p>
+      <p style="color:#666; font-size:14px; margin-bottom:12px;">tokens 
+        <span style="margin-left:8px; padding:2px 8px; border:1px solid #ddd; border-radius:12px; font-size:12px;">Digital</span>
+      </p>
+      <button style="width:100%; padding:10px; background:#009957; color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer;">200 points</button>
+    </div>
+
+    <div style="flex:1 1 calc(33% - 16px); min-width:250px; border:1px solid #eee; border-radius:10px; padding:20px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+    <div style="font-size:30px; margin-bottom:10px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 12v10H4V12"></path><path d="M20 7H4"></path><path d="M12 12V7h0z"></path><path d="M12 7a6.2 6.2 0 0 0-5 3 6.2 6.2 0 0 0 10 0c-1.62-1.87-3.21-3-5-3z"></path>
+            </svg>
+</div>
+    <h3 style="font-size:16px; margin:0; font-weight:600;">Meal Voucher</h3>
+    <p style="color:#555; font-size:14px; margin:6px 0 12px;">Redeem a free meal at a local community kitchen</p>
+    <p style="color:#666; font-size:14px; margin-bottom:12px;">tokens 
+      <span style="margin-left:8px; padding:2px 8px; border:1px solid #ddd; border-radius:12px; font-size:12px;">Physical</span>
+    </p>
+    <button style="width:100%; padding:10px; background:#009957; color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer;">200 points</button>
+  </div>
+
+  <div style="flex:1 1 calc(33% - 16px); min-width:250px; border:1px solid #eee; border-radius:10px; padding:20px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+    <div style="font-size:30px; margin-bottom:10px;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+            </svg>
+</div>
+    <h3 style="font-size:16px; margin:0; font-weight:600;">Recognition Badge</h3>
+    <p style="color:#555; font-size:14px; margin:6px 0 12px;">Earn a digital badge for outstanding volunteer work</p>
+    <p style="color:#666; font-size:14px; margin-bottom:12px;">tokens 
+      <span style="margin-left:8px; padding:2px 8px; border:1px solid #ddd; border-radius:12px; font-size:12px;">Digital</span>
+    </p>
+    <button style="width:100%; padding:10px; background:#009957; color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer;">100 points</button>
+  </div>
+
+
+  </div>
+
+ 
+    </section>
+
+
+  </div>
+  <script src="{% static 'script.js' %}"></script>
+  <style>
+    /* Additional Stats Styling */
+    .additional-stats {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #e5e7eb;
+    }
+    
+    .stat-row {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+    }
+    
+    .stat-mini {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(0, 153, 87, 0.05);
+      border-radius: 12px;
+      border: 1px solid rgba(0, 153, 87, 0.1);
+      min-width: 120px;
+    }
+    
+    .mini-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #009957;
+      margin-bottom: 0.25rem;
+    }
+    
+    .mini-label {
+      font-size: 0.875rem;
+      color: #6b7280;
+      font-weight: 500;
+    }
+    
+    /* Enhanced Progress Bar */
+    .progress-container {
+      background: #e5e7eb;
+      border-radius: 10px;
+      height: 8px;
+      margin: 0.5rem 0;
+      overflow: hidden;
+    }
+    
+    .progress-bar {
+      background: linear-gradient(90deg, #009957, #00C851);
+      height: 100%;
+      border-radius: 10px;
+      transition: width 0.3s ease;
+    }
+    
+    /* Enhanced Stats Card */
+    .user-stats-card {
+      background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+      border: 2px solid #bbf7d0;
+      box-shadow: 0 10px 25px rgba(0, 153, 87, 0.1);
+    }
+    
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #009957, #00C851);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* Level up animation */
+    @keyframes levelUp {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    
+    .level-up {
+      animation: levelUp 0.6s ease-in-out;
+    }
+  </style>
+
+  <script>
+    // Add level up detection and animation
+    document.addEventListener('DOMContentLoaded', function() {
+      const levelElement = document.getElementById('user-level');
+      const tokensElement = document.getElementById('user-tokens');
+      
+      // Check if this is a new level (you could pass this from the backend)
+      const currentLevel = parseInt(levelElement.textContent);
+      const currentTokens = parseInt(tokensElement.textContent);
+      
+      // Add some visual feedback
+      if (currentLevel > 1) {
+        levelElement.classList.add('level-up');
+      }
+      
+      // Add token earning animation
+      if (currentTokens > 0) {
+        tokensElement.style.animation = 'pulse 2s ease-in-out';
+      }
+    });
+    
+    (function () { if (!window.chatbase || window.chatbase("getState") !== "initialized") { window.chatbase = (...arguments) => { if (!window.chatbase.q) { window.chatbase.q = [] } window.chatbase.q.push(arguments) }; window.chatbase = new Proxy(window.chatbase, { get(target, prop) { if (prop === "q") { return target.q } return (...args) => target(prop, ...args) } }) } const onLoad = function () { const script = document.createElement("script"); script.src = "https://www.chatbase.co/embed.min.js"; script.id = "dttBjwRx5qXgQhm1c5SpC"; script.domain = "www.chatbase.co"; document.body.appendChild(script) }; if (document.readyState === "complete") { onLoad() } else { window.addEventListener("load", onLoad) } })();
+  </script>
+  
+
+
+
+
+{% endblock %}

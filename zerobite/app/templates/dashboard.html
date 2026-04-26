@@ -1,0 +1,673 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Dashboard - Basix{% endblock %}
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'styles.css' %}">
+
+<div class="page">
+  <!-- Welcome Section -->
+  <section class="dashboard-welcome">
+    <div class="container">
+      <h2 class="page-title">
+        Your Dashboard
+      </h2>
+      <p class="page-subtitle">
+        Your donation dashboard – track your food donations and help reduce waste
+      </p>
+      
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3 class="stat-label">Total Donations</h3>
+          <p class="stat-number">{{ total }}</p>
+        </div>
+        <div class="stat-card">
+          <h3 class="stat-label">Active Donations</h3>
+          <p class="stat-number">{{ active }}</p>
+        </div>
+        <div class="stat-card">
+          <h3 class="stat-label">Successful Pickups</h3>
+          <p class="stat-number">{{ completed }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- My Donations -->
+  <section class="my-donations">
+    <div class="container">
+      <h2 class="section-title">My Donations</h2>
+      <div class="donations-grid">
+        {% for donation in donations %}
+        <div class="donation-card">
+          <div class="card-left">
+            <img class="thumb" src="{{ donation.food_image.url|default:'/static/default-food.jpg' }}" alt="{{ donation.item_name }}">
+          </div>
+          <div class="card-mid">
+            <div class="title-row">
+              <h3 class="item-title">{{ donation.item_name }}</h3>
+              <span class="tag status-{{ donation.status }}">{{ donation.get_status_display }}</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta">📍 {{ donation.pickup_location }}</span>
+              <span class="meta">🕒 {{ donation.time_available }}</span>
+            </div>
+            <div class="facts-row">
+              <span class="fact">📦 {{ donation.quantity }} {{ donation.unit }}</span>
+              <span class="fact">📝 {{ donation.notes|default:"No additional notes" }}</span>
+            </div>
+          </div>
+          <div class="card-right">
+            {% if donation.qr_code %}
+              <div class="action-buttons">
+                <button class="action-btn primary view-qr-btn" data-qr-url="{{ donation.qr_code.url }}" data-donation-id="{{ donation.id }}">
+                  <span class="btn-icon">👁️</span>
+                  <span class="btn-text">View QR</span>
+                </button>
+              </div>
+            {% endif %}
+            <div class="expires">Posted on {{ donation.created_at|date:"M d, Y" }}</div>
+          </div>
+        </div>
+        {% empty %}
+        <p class="no-donations">You haven't listed any donations yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- QR Modal -->
+  <div id="qrModal" class="modal-overlay" onclick="if(event.target === this) { this.classList.remove('active'); }">
+    <div class="modal-box" onclick="event.stopPropagation();">
+      <button onclick="const modal = document.getElementById('qrModal'); if(modal) { modal.classList.remove('active'); }" class="modal-close">&times;</button>
+      <h3 class="modal-title">Pickup QR Code</h3>
+      <p class="modal-subtitle">Show this code for verification</p>
+      <img id="qrImage" src="" alt="QR Code" class="qr-image">
+      <button onclick="const modal = document.getElementById('qrModal'); if(modal) { modal.classList.remove('active'); }" class="btn primary">Close</button>
+    </div>
+  </div>
+
+<style>
+.dashboard-welcome {
+  background: #f8fafc;
+  padding: 2rem 0;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.stat-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.stat-label {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin: 0;
+}
+
+.my-donations {
+  padding: 2rem 0;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #1f2937;
+}
+
+/* Donation Cards - Match donation page styling */
+.donations-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.donation-card {
+  display: grid;
+  grid-template-columns: 120px 1fr 180px;
+  gap: 16px;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.donation-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+.card-left .thumb {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+  background: #f3f3f3;
+}
+
+.card-mid {
+  min-width: 0;
+}
+
+.title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.item-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.tag {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #eef2ee;
+  color: #2b2b2b;
+  border: 1px solid #e4e4e4;
+}
+
+.tag.status-pending {
+  background: rgba(245, 158, 11, 0.12);
+  color: #d97706;
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.tag.status-approved {
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.tag.status-completed {
+  background: rgba(59, 130, 246, 0.12);
+  color: #2563eb;
+  border-color: rgba(59, 130, 246, 0.25);
+}
+
+.tag.status-reserved {
+  background: rgba(107, 114, 128, 0.12);
+  color: #4b5563;
+  border-color: rgba(107, 114, 128, 0.25);
+}
+
+.meta-row, .facts-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.meta, .fact {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.expires {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Action Buttons Styling */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  min-height: 44px;
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, #009957, #007a47);
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 153, 87, 0.2);
+}
+
+.action-btn.primary:hover {
+  background: linear-gradient(135deg, #007a47, #005d35);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 153, 87, 0.3);
+}
+
+.btn-icon {
+  font-size: 1rem;
+}
+
+.btn-text {
+  font-weight: 600;
+}
+
+.no-donations {
+  color: #6b7280;
+  text-align: center;
+  grid-column: 1 / -1;
+  padding: 2rem;
+}
+
+#qrModal.modal-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  display: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 9999 !important;
+  cursor: pointer;
+}
+
+#qrModal.modal-overlay.active {
+  display: flex !important;
+}
+
+/* Removed problematic CSS rule that was forcing modal to show */
+
+.modal-box {
+  background: white !important;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  max-width: 24rem;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  cursor: default; /* Prevent click propagation */
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 51 !important;
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #10b981;
+  margin-bottom: 0.5rem;
+}
+
+.modal-subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 1rem;
+}
+
+.qr-image {
+  width: 10rem;
+  height: 10rem;
+  margin: 0 auto 1.25rem;
+  display: block;
+  position: relative;
+  border-radius: 8px;
+}
+
+.qr-image.scanned {
+  filter: grayscale(0.3);
+  opacity: 0.7;
+}
+
+.scanned-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  z-index: 10;
+  pointer-events: none;
+  animation: scannedPulse 2s ease-in-out infinite;
+}
+
+@keyframes scannedPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+/* Responsive Design */
+@media (min-width: 1100px) {
+  .donations-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 780px) {
+  .donation-card {
+    grid-template-columns: 100px 1fr;
+  }
+  .card-right {
+    grid-column: span 2;
+    align-items: stretch;
+  }
+  .donation-card .btn {
+    width: 100%;
+  }
+}
+</style>
+
+<script>
+function openModal(qrUrl, donationId) {
+  console.log('=== openModal called with:', qrUrl, donationId, '===');
+  
+  const modal = document.getElementById('qrModal');
+  const qrImage = document.getElementById('qrImage');
+  
+  console.log('Modal element:', modal);
+  console.log('QR Image element:', qrImage);
+  
+  if (!modal || !qrImage) {
+    console.error('Modal or QR image not found');
+    console.error('Modal:', modal);
+    console.error('QRImage:', qrImage);
+    return;
+  }
+  
+  // Reset any previous overlays
+  clearOverlays(qrImage);
+  
+  // Set QR image source
+  qrImage.src = qrUrl;
+  
+  // Show modal using CSS class
+  console.log('Adding active class to modal...');
+  modal.classList.add('active');
+  
+  console.log('Modal opened with active class');
+  console.log('Modal classes:', modal.className);
+  console.log('Modal computed style:', window.getComputedStyle(modal).display);
+  console.log('=== openModal finished ===');
+  
+  // Check donation status from backend
+  checkDonationStatus(donationId);
+  
+  // Set up periodic checking every 5 seconds
+  const statusCheckInterval = setInterval(() => {
+    if (modal.style.display === 'flex') {
+      checkDonationStatus(donationId);
+    } else {
+      clearInterval(statusCheckInterval);
+    }
+  }, 5000);
+  
+  // Store interval ID for cleanup
+  modal.dataset.statusCheckInterval = statusCheckInterval;
+  
+  // Add click outside to close
+  modal.onclick = function(e) {
+    console.log('Modal clicked:', e.target, e.target === modal); // Debug
+    if (e.target === modal) {
+      closeModal();
+    }
+  };
+  
+  // Prevent modal content clicks from closing modal
+  const modalBoxElement = modal.querySelector('.modal-box');
+  if (modalBoxElement) {
+    modalBoxElement.onclick = function(e) {
+      console.log('Modal box clicked, stopping propagation'); // Debug
+      e.stopPropagation();
+    };
+  }
+  
+  // Add escape key to close
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && modal.style.display === 'flex') {
+      closeModal();
+    }
+  });
+}
+
+function checkDonationStatus(donationId) {
+  fetch(`/api/check-donation-status/${donationId}/`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        const qrImage = document.getElementById('qrImage');
+        
+        if (data.is_scanned) {
+          // Only show overlay if actually completed (picked up)
+          showScannedOverlay(qrImage, 'completed', data.scanned_by);
+        } else if (data.is_reserved) {
+          // Show reserved status but don't block the QR code
+          showReservedStatus(qrImage, data.reserved_by);
+        } else {
+          // Clear any existing overlays for available donations
+          clearOverlays(qrImage);
+        }
+      }
+    })
+    .catch(error => {
+      console.error('Error checking donation status:', error);
+    });
+}
+
+function showScannedOverlay(qrImage, status, scannedBy) {
+  qrImage.classList.add('scanned');
+  
+  const overlay = document.createElement('div');
+  overlay.className = 'scanned-overlay';
+  
+  // Show different text based on status
+  if (status === 'completed') {
+    overlay.textContent = 'Picked Up';
+  } else if (status === 'reserved') {
+    overlay.textContent = 'Reserved';
+  } else {
+    overlay.textContent = 'Scanned';
+  }
+  
+  // Add scanned by info if available
+  if (scannedBy) {
+    const scannedByDiv = document.createElement('div');
+    scannedByDiv.style.cssText = `
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+      opacity: 0.9;
+    `;
+    scannedByDiv.textContent = `by ${scannedBy}`;
+    overlay.appendChild(scannedByDiv);
+  }
+  
+  qrImage.parentNode.style.position = 'relative';
+  qrImage.parentNode.appendChild(overlay);
+}
+
+function showReservedStatus(qrImage, reservedBy) {
+  // Don't add scanned class - QR should still be scannable
+  const existingOverlay = qrImage.parentNode.querySelector('.reserved-status');
+  if (existingOverlay) {
+    existingOverlay.remove();
+  }
+  
+  const overlay = document.createElement('div');
+  overlay.className = 'reserved-status';
+  overlay.style.cssText = `
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 193, 7, 0.9);
+    color: #856404;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  `;
+  overlay.textContent = `Reserved by ${reservedBy}`;
+  
+  qrImage.parentNode.style.position = 'relative';
+  qrImage.parentNode.appendChild(overlay);
+}
+
+function clearOverlays(qrImage) {
+  qrImage.classList.remove('scanned');
+  const existingOverlay = qrImage.parentNode.querySelector('.scanned-overlay');
+  if (existingOverlay) {
+    existingOverlay.remove();
+  }
+  const existingReserved = qrImage.parentNode.querySelector('.reserved-status');
+  if (existingReserved) {
+    existingReserved.remove();
+  }
+}
+
+// Simulation code removed - now using backend API
+
+function closeModal() {
+  console.log('=== closeModal called ===');
+  
+  const modal = document.getElementById('qrModal');
+  console.log('Modal found:', modal);
+  
+  if (modal) {
+    console.log('Removing active class...');
+    modal.classList.remove('active');
+    console.log('Active class removed successfully');
+    
+    // Clear status check interval
+    if (modal.dataset.statusCheckInterval) {
+      clearInterval(modal.dataset.statusCheckInterval);
+      delete modal.dataset.statusCheckInterval;
+    }
+  } else {
+    console.error('Modal not found!');
+  }
+  
+  console.log('=== closeModal finished ===');
+}
+
+// Make functions globally accessible
+window.closeModal = closeModal;
+window.openModal = openModal;
+
+// Test if functions are properly defined
+console.log('After function definition - closeModal type:', typeof closeModal);
+console.log('After function definition - window.closeModal type:', typeof window.closeModal);
+
+// Test function accessibility
+console.log('closeModal function available:', typeof closeModal);
+console.log('openModal function available:', typeof openModal);
+
+// Add a simple test function
+window.testCloseModal = function() {
+  console.log('testCloseModal called');
+  closeModal();
+};
+
+console.log('testCloseModal function available:', typeof window.testCloseModal);
+
+// Ensure modal is hidden when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  const modal = document.getElementById('qrModal');
+  if (modal) {
+    modal.classList.remove('active');
+    console.log('Modal hidden on page load');
+  }
+  
+  // Add click listeners to all View QR buttons
+  try {
+    const viewQrButtons = document.querySelectorAll('.view-qr-btn');
+    console.log('Found View QR buttons:', viewQrButtons.length);
+    viewQrButtons.forEach((button, index) => {
+      console.log(`Button ${index}:`, button);
+      console.log(`Button ${index} data-qr-url:`, button.getAttribute('data-qr-url'));
+      console.log(`Button ${index} data-donation-id:`, button.getAttribute('data-donation-id'));
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const qrUrl = this.getAttribute('data-qr-url');
+        const donationId = this.getAttribute('data-donation-id');
+        console.log('View QR button clicked!', qrUrl, donationId);
+        console.log('About to call openModal...');
+        try {
+          openModal(qrUrl, parseInt(donationId));
+          console.log('openModal called successfully');
+        } catch (error) {
+          console.error('Error calling openModal:', error);
+        }
+      });
+    });
+  } catch (error) {
+    console.error('Error setting up View QR button listeners:', error);
+  }
+
+  // Modal event listeners are now handled by inline onclick attributes
+  
+  console.log('Event listeners setup completed');
+});
+
+// Event listeners are handled by onclick attributes in HTML
+</script>
+{% endblock %}

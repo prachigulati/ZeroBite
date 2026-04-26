@@ -1,0 +1,160 @@
+.carousel-inner img {
+  height: 300px; /* adjust as needed */
+  width: 100%;
+  object-fit: cover;
+}
+
+.carousel-caption {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.48); /* slightly softer overlay for clarity */
+  padding: 1.2rem 2rem;
+  border-radius: 1.2rem;
+  width: auto;
+  min-width: 220px;
+  max-width: 80vw;
+  text-align: center;
+  z-index: 2;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+}
+
+.carousel-caption h2 {
+  color: #fff;
+  font-size: 2.2rem;
+  font-weight: 800;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+  margin-bottom: 0.7rem;
+  word-break: break-word;
+}
+
+.carousel-caption p {
+  color: #f0f0f0;
+  font-size: 1.13rem;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  line-height: 1.4;
+  margin-bottom: 0;
+  word-break: break-word;
+}
+
+/* Responsive tweaks for mobile screens */
+@media (max-width: 767px) {
+  .carousel-inner img {
+    height: 180px;
+  }
+  .carousel-caption {
+    padding: 0.8rem 0.5rem;
+    min-width: 70vw;
+    max-width: 95vw;
+  }
+  .carousel-caption h2 {
+    font-size: 1.12rem;
+  }
+  .carousel-caption p {
+    font-size: 0.97rem;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Form fade-in on load */
+form.donate-form {
+  animation: fadeInUp 0.7s ease forwards;
+  opacity: 0;
+}
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Label animation on input focus */
+input:focus + label,
+select:focus + label,
+textarea:focus + label {
+  color: #647dee;
+  transition: color 0.25s ease;
+}
+
+/* Smooth input and select focus border glow */
+input[type=text]:focus,
+input[type=tel]:focus,
+input[type=email]:focus,
+input[type=number]:focus,
+input[type=date]:focus,
+input[type=time]:focus,
+select:focus,
+textarea:focus {
+  border-color: #647dee;
+  box-shadow: 0 0 8px 1px #647dee55;
+  transition: border-color 0.25s ease, box-shadow 0.3s ease;
+}
+
+/* Button hover animation */
+.btn.primary:hover,
+.btn.primary:focus {
+  transform: scale(1.08);
+  box-shadow: 0 6px 20px rgba(100, 125, 238, 0.6);
+  transition: transform 0.25s ease, box-shadow 0.3s ease;
+}
+
+.btn.ghost:hover,
+.btn.ghost:focus {
+  background-color: #e0e3f9;
+  color: #647dee;
+  border-color: #647dee;
+  transform: scale(1.05);
+  transition: all 0.25s ease;
+}
+
+/* Smooth transition for inputs and buttons */
+input, select, textarea, .btn {
+  transition: all 0.3s ease;
+  will-change: transform, box-shadow, border-color;
+}
+
+
+
+
+
+
+.donate-form-section {
+  background-color: #ffffff; /* white background */
+}
+
+
+.donate-form-heading {
+  text-align: center;
+  color: #00b35a; /* green color */
+  font-weight: 700; /* optional: make it bold */
+  margin-bottom: 1.5rem; /* optional spacing below */
+}
+
+
+.donate-form-section > .container > h2:first-of-type:hover {
+  transform: scale(1.05);
+  color: #00b35a; /* slightly brighter green */
+}

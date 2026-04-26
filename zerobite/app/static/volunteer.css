@@ -1,0 +1,203 @@
+/* ================================
+   Volunteer Page Styles
+==================================*/
+
+/* Scanner Section */
+.scanner-section {
+  padding-top: 12px;
+  padding-bottom: 80px; 
+}
+
+.scanner-section .container {
+  max-width: 500px;
+  text-align: center;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.scanner-placeholder {
+  border: 2px dashed #ddd;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted, #666);
+  min-height: 200px;
+}
+
+.camera-icon {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 16px;
+  color: #ccc;
+}
+
+.scanner-box {
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 300px;   /* fixed height */
+  margin-top: 16px;
+  border: 2px solid var(--accent);
+}
+
+/* QR scanner feed */
+#preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#preview video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scan-result {
+  margin: 16px 0;
+  font-weight: 500;
+  color: var(--text);
+  min-height: 24px;
+}
+
+.hidden {
+  display: none;
+}
+
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 14px 24px;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s ease;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+}
+
+.btn.primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn.primary:hover {
+  background: #007a47;
+  transform: translateY(-1px);
+}
+
+.btn.ghost {
+  background: #f1f5f9;
+  color: var(--text);
+  border: 1px solid #e2e8f0;
+}
+
+.btn.ghost:hover:not(:disabled) {
+  background: #e2e8f0;
+  transform: translateY(-1px);
+}
+
+.btn.ghost:disabled {
+  background: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Success/Error states */
+.scan-result.success {
+  color: var(--accent);
+}
+
+.scan-result.error {
+  color: #dc2626;
+}
+
+/* 📱 Mobile tweaks */
+@media (max-width: 480px) {
+  .scanner-placeholder {
+    padding: 24px;
+    min-height: 150px;
+  }
+  
+  .camera-icon {
+    width: 64px;
+    height: 64px;
+  }
+  
+  .scanner-box {
+    height: 220px; 
+  }
+  
+  .btn {
+    width: 100%;
+    padding: 16px;
+  }
+  
+  .form-actions {
+    gap: 16px;
+  }
+}
+
+/* Tablet adjustments */
+@media (max-width: 768px) {
+  .scanner-section .container {
+    max-width: 100%;
+    padding: 0 16px;
+  }
+}
+
+/* Animation for scanner activation */
+.scanner-box.activating {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 153, 87, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 153, 87, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 153, 87, 0);
+  }
+}
+
+/* Loading state for buttons */
+.btn.loading {
+  position: relative;
+  color: transparent;
+}
+
+.btn.loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
