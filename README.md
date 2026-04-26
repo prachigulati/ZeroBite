@@ -23,7 +23,6 @@ Food waste is a dual crisis. While millions face food insecurity, decaying surpl
 * **Social Impact:** Total meals saved and lives impacted.
 * **CSR Reporting:** A dedicated tool for corporate donors to track and demonstrate their Corporate Social Responsibility impact.
 
----
 
 ## 🛠️ Tech Stack
 * **Backend:** Python (Django)
@@ -31,7 +30,6 @@ Food waste is a dual crisis. While millions face food insecurity, decaying surpl
 * **Database:** SQLite / PostgreSQL
 * **Tools:** QR Code API, Data Visualization (Chart.js/D3.js)
 
----
 
 ## 🚀 Getting Started
 
