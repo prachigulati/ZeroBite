@@ -42,7 +42,7 @@ Food waste is a dual crisis. While millions face food insecurity, decaying surpl
 ### Installation
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/prachigulati/ZeroBite.git](https://github.com/prachigulati/ZeroBite.git)
+   git clone [https://github.com/prachigulati/ZeroBite.git]
    cd ZeroBite
 2. **Set up a virtual environment:**
    ```bash
